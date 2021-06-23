@@ -12,14 +12,39 @@ class MainTabController: UITabBarController {
     
     //MARK: - Properties
     
+    //that's a format for programatically creating buttons
+    let actionButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.tintColor = .white
+        button.backgroundColor = UIColor.mainBlue
+        button.setImage(UIImage(named: "new_tweet"), for: .normal)
+        button.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
     //MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViewControllers()
+        configureUI()
+    }
+    
+    //MARK: - Selectors
+    
+    @objc func actionButtonTapped() {
+        print("clicked")
     }
     
     //MARK: - Helpers
+    
+    func configureUI() {
+        view.addSubview(actionButton)
+        
+        actionButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.safeAreaLayoutGuide.rightAnchor, paddingBottom: 64, paddingRight: 16, width: 56, height: 56)
+        actionButton.layer.cornerRadius = 28
+        
+    }
     
     func configureViewControllers(){
         
