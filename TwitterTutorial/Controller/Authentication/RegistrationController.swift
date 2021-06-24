@@ -10,7 +10,9 @@ import UIKit
 class RegistrationController: UIViewController {
     //MARK: - Properties
     
-    private let addProfileImageView: UIButton = {
+    private let imagePicker = UIImagePickerController()
+    
+    private let plusPhotoButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "plus_photo"), for: .normal)
         button.tintColor = .white
@@ -99,16 +101,19 @@ class RegistrationController: UIViewController {
     }
     
     @objc func handleAddProfilePicture() {
-        print("handeling add profile image..")
+        present(imagePicker, animated: true, completion: nil)
     }
     //MARK: - Helpers
     
     func configureUI() {
         view.backgroundColor = .mainBlue
         
-        view.addSubview(addProfileImageView)
-        addProfileImageView.centerX(inView: view, topAnchor: view.safeAreaLayoutGuide.topAnchor)
-        addProfileImageView.setDimensions(width: 128, height: 128)
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        
+        view.addSubview(plusPhotoButton)
+        plusPhotoButton.centerX(inView: view, topAnchor: view.safeAreaLayoutGuide.topAnchor)
+        plusPhotoButton.setDimensions(width: 128, height: 128)
         
         
         let stack = UIStackView(arrangedSubviews: [emailContainerView, passwordContainerView, fullnameContainerView, usernameContainerView, signupButton])
@@ -118,9 +123,30 @@ class RegistrationController: UIViewController {
         
         view.addSubview(stack)
         
-        stack.anchor(top: addProfileImageView.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 32, paddingLeft: 32, paddingRight: 32)
+        stack.anchor(top: plusPhotoButton.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 32, paddingLeft: 32, paddingRight: 32)
         
         view.addSubview(alreadyHaveAccountButton)
         alreadyHaveAccountButton.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingLeft: 8, paddingBottom: 20, paddingRight: 8)
     }
+}
+
+
+extension RegistrationController: UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        //safely retrieving image from my gallery
+        guard let profileImage = info[.editedImage] as? UIImage else { return }
+        
+        self.plusPhotoButton.setImage(profileImage.withRenderingMode(.alwaysOriginal), for: .normal)
+        self.plusPhotoButton.layer.cornerRadius = 128/2
+        self.plusPhotoButton.layer.masksToBounds = true
+        self.plusPhotoButton.imageView?.clipsToBounds = true
+        self.plusPhotoButton.imageView?.contentMode = .scaleAspectFill
+        self.plusPhotoButton.layer.borderWidth = 3
+        self.plusPhotoButton.layer.borderColor = UIColor.white.cgColor
+        
+        dismiss(animated: true, completion: nil)
+    }
+    
 }
