@@ -16,7 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // configure my main controller for the app
         guard let scene = scene as? UIWindowScene else { return }
         window = UIWindow(windowScene: scene)
-        window?.rootViewController = UINavigationController(rootViewController: LoginController() ) //MainTabController()
+        window?.rootViewController = MainTabController() // UINavigationController(rootViewController: LoginController() ) //
         window?.makeKeyAndVisible()
         
     }

@@ -108,38 +108,21 @@ class RegistrationController: UIViewController {
         guard let fullname = fullnameTextField.text else { return }
         guard let username = usernameTextField.text else { return }
         
-        guard let imageData = profileImage.jpegData(compressionQuality: 0.3) else { return }
-        let filename = NSUUID().uuidString
-        let storageRef = STORAGE_PROFILE_IMAGES.child(filename)
+        let credentials = AuthCredentials(email: email, password: password, fullname: fullname, username: username, profileImage: profileImage)
         
-        // step 1 - upload image, step 2 - upload sigh in Info, step 3 - the rest of user data
-        storageRef.putData(imageData, metadata: nil) { (meta, error) in
-            storageRef.downloadURL { (url, error) in
-                guard let profileImageURL = url?.absoluteString else { return }
-                
-                Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
-                    if let error = error {
-                        print("DEBUG: error is: \(error.localizedDescription)")
-                        return
-                    }
-                    print("DEBUG: Successfully registered new user!")
-                    
-                    guard let uid = result?.user.uid else { return }
-                    
-                    
-                    let values = ["email": email,
-                                  "username": username,
-                                  "fullname": fullname,
-                                  "profileImageUrl": profileImageURL]
-                    
-                    REF_USERS.child(uid).updateChildValues(values) { (error, ref) in
-                        print("DEBUG: successfully updated user info")
-                    }
-                }
-                
-                
-            }
+        AuthService.shared.registerUser(credentials: credentials) { (error, ref)  in
+            print("DEBUG: Sign up successfull")
+            print("DEBUG: Handle update user interface here.. ")
+            
+            guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow}) else { return }
+            guard let tab = window.rootViewController as? MainTabController else { return }
+            
+            tab.authenticateUserAndConfigureUI()
+            
+            self.dismiss(animated: true, completion: nil)
         }
+        
+    
     }
     
     @objc func handleAddProfilePicture() {
