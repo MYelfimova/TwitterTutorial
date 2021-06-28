@@ -10,6 +10,17 @@ import Firebase
 
 class MainTabController: UITabBarController {
     
+    var user: User? {
+        didSet {
+            print("DEBUG: Did set user in main tab...")
+            // I'm being safe here because i dont know at which point i'll get back the User fetched data
+            guard let nav = viewControllers?.first as? UINavigationController else { return }
+            guard let feed = nav.viewControllers.first as? FeedController else { return }
+            
+            feed.user = user
+        }
+    }
+    
     //MARK: - Properties
     
     //that's a format for programatically creating buttons
@@ -32,6 +43,14 @@ class MainTabController: UITabBarController {
     }
     
     //MARK: API
+    
+    func fetchUser() {
+        UserService.shared.fetchUser { user in
+            print("DEBUG: Main Tab User Is: \(user.username)")
+            self.user = user
+        }
+    }
+    
     // check if a user is logged in and act accordingly
     func authenticateUserAndConfigureUI() {
         if Auth.auth().currentUser == nil {
@@ -43,6 +62,7 @@ class MainTabController: UITabBarController {
             }
         } else {
             print("DEBUG: the user is logged IN")
+            fetchUser()
             configureViewControllers()
             configureUI()
         }
