@@ -89,6 +89,7 @@ class RegistrationController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        initializeHideKeyboard()
         configureUI()
     }
     

@@ -32,6 +32,7 @@ class FeedController: UIViewController {
         view.backgroundColor = .white
         let imageView = UIImageView(image: UIImage(named: "twitter_logo_blue"))
         imageView.contentMode = .scaleAspectFit
+        imageView.setDimensions(width: 44, height: 44)
         navigationItem.titleView = imageView
     }
     
@@ -40,9 +41,9 @@ class FeedController: UIViewController {
         
         let profileImageView = UIImageView()
         profileImageView.backgroundColor = .white
-        profileImageView.setDimensions(width: 32, height: 32)
+        profileImageView.setDimensions(width: 36, height: 36)
         profileImageView.layer.masksToBounds = true
-        profileImageView.layer.cornerRadius = 32/2
+        profileImageView.layer.cornerRadius = 36/2
         profileImageView.sd_setImage(with: user.profileImageUrl, completed: nil)
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: profileImageView)

@@ -79,7 +79,11 @@ class MainTabController: UITabBarController {
     //MARK: - Selectors
     
     @objc func actionButtonTapped() {
-        print("clicked")
+        guard let user = self.user else { return }
+        let controller = UploadTweetController(user: user)
+        let nav = UINavigationController(rootViewController: controller)
+        nav.modalPresentationStyle = .fullScreen
+        present(nav, animated: true, completion: nil)
     }
     
     //MARK: - Helpers
@@ -118,3 +122,6 @@ class MainTabController: UITabBarController {
         return nav
     }
 }
+
+
+
